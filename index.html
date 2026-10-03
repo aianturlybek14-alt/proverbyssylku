@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0720"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<title>ПроверьСсылку: защита от обмана</title>
+<meta name="description" content="Бесплатная проверка подозрительных сообщений, ссылок, QR-кодов, фото и файлов на мошенничество. Показывает, где именно обман. Для пожилых людей, детей и всей семьи.">
+<meta property="og:title" content="ПроверьСсылку: защита от обмана"><meta property="og:description" content="Проверьте СМС, ссылку, QR-код или файл. Покажу, где именно обман."><meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9B%A1%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap">
+<style>
+:root{color-scheme:dark;--bg:#0d0720;--card:rgba(32,20,66,.78);--line:#3d2c70;--ink:#f3eeff;--mut:#b6a9dc;--acc:#a78bfa;--acc2:#e879f9;--ok:#4ade80;--warn:#fbbf24;--bad:#fb7185;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);font-size:16px}html.big{font-size:20px}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:1rem/1.55 Manrope,"Segoe UI",system-ui,sans-serif;background:var(--bg) radial-gradient(900px 500px at 85% -10%,#4c1d95aa,transparent),radial-gradient(700px 500px at -10% 30%,#86198f66,transparent) fixed}
+main{max-width:800px;margin:0 auto;padding:18px 16px 56px}
+header{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+h1{font-size:2rem;line-height:1.1;margin:6px 0;font-weight:800;background:linear-gradient(90deg,#c4b5fd,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--mut);margin:0 0 16px;max-width:58ch}
+.tabs{display:flex;gap:6px;margin:6px 0 14px;flex-wrap:wrap}
+.tabs button{flex:1;min-width:130px;padding:11px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;font:inherit;font-weight:700;cursor:pointer}
+.tabs button[aria-selected=true]{background:linear-gradient(135deg,#7c3aed,#c026d3);border-color:transparent}
+button:focus-visible,textarea:focus-visible,summary:focus-visible,label:focus-within{outline:3px solid var(--acc2);outline-offset:2px}
+textarea{width:100%;min-height:110px;padding:14px;border:1px solid var(--line);border-radius:14px;background:#120a2b;color:var(--ink);font:inherit;resize:vertical}
+.drop{margin:10px 0;padding:18px;border:2px dashed #6d4fc4;border-radius:16px;background:#1a0f3d88;text-align:center;transition:.15s}
+.drop.on{background:#3b1d8a88;border-color:var(--acc2)}
+.drop p{margin:0 0 10px;color:var(--mut)}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.btn{padding:12px 20px;border:0;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#c026d3);color:#fff;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 6px 24px #7c3aed55}
+.ghost{padding:9px 14px;border:1px solid var(--line);border-radius:12px;background:#ffffff0a;color:var(--ink);font:inherit;font-size:.9rem;font-weight:600;cursor:pointer}
+.ghost:hover{border-color:var(--acc)}
+.ex{margin:8px 0;justify-content:flex-start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px;backdrop-filter:blur(6px)}
+.vd{display:flex;gap:16px;align-items:center;border-radius:20px;padding:18px;margin-top:14px;border:1px solid var(--c);background:linear-gradient(135deg,color-mix(in srgb,var(--c) 22%,#150b33),#150b33)}
+.vd.ok{--c:var(--ok)}.vd.warn{--c:var(--warn)}.vd.bad{--c:var(--bad)}
+.ring{flex:none;width:84px;height:84px;border-radius:50%;border:6px solid var(--c);display:grid;place-items:center;font-size:2.6rem;font-weight:800;color:var(--c);box-shadow:0 0 34px var(--c)}
+.vd h2{margin:0 0 4px;font-size:1.5rem;color:var(--c)}.vd p{margin:0 0 8px}
+.meter{height:8px;background:#ffffff1a;border-radius:6px;overflow:hidden}.meter i{display:block;height:100%;background:var(--c)}
+.msg,.txt{white-space:pre-wrap;word-break:break-word;background:#0f0826;border:1px solid var(--line);border-radius:12px;padding:12px;max-height:340px;overflow:auto}
+mark{color:#fff;border-radius:5px;padding:1px 3px;font-weight:700}
+mark.h{background:#be123c}mark.m{background:#b45309}mark.l{background:#6d28d9}
+mark sup{font-size:.65em;margin-left:2px}
+ul.r{list-style:none;padding:0;margin:10px 0 0}
+ul.r li{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--acc);color:#1b0b4a;font-weight:800;display:grid;place-items:center;font-size:.85rem}
+.pt{margin-left:auto;font-weight:800;color:var(--acc2);white-space:nowrap}
+code{font-family:ui-monospace,Consolas,monospace;background:#0f0826;padding:1px 6px;border-radius:6px;word-break:break-all;font-size:.9em}
+small,.mut,.note{color:var(--mut)}.note{font-size:.85rem;margin-top:14px}
+.dom{font-family:ui-monospace,Consolas,monospace;word-break:break-all;background:#0f0826;border-radius:10px;padding:10px;border:1px solid var(--line)}
+.dom mark{background:#7c3aed}
+details.src{border:1px solid var(--line);border-radius:14px;margin-top:10px;background:#ffffff08}
+details.src>summary,details.q>summary{cursor:pointer;padding:12px 14px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:center}
+details.src>div{padding:0 14px 14px}
+.b{margin-left:auto;padding:2px 10px;border-radius:99px;font-size:.85rem;border:1px solid currentColor;white-space:nowrap}
+.b.ok{color:var(--ok)}.b.warn{color:var(--warn)}.b.bad{color:var(--bad)}
+.clean{display:flex;gap:8px;padding:8px 2px;border-top:1px solid var(--line);font-size:.92rem;word-break:break-all}
+.ai{border-left:4px solid var(--acc2)}.ai h3{margin:0 0 6px}
+.hid{display:none}.opt{display:flex;gap:8px}.opt button{flex:1}
+.do li{margin:6px 0}
+details.q{border:1px solid var(--line);border-radius:14px;margin-top:10px;background:var(--card)}
+details.q>div{padding:0 16px 14px}
+.bar{height:6px;border-radius:4px;background:#ffffff1a;margin-top:10px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--acc2);transition:width .2s}
+*{-webkit-tap-highlight-color:transparent}button,label,summary{touch-action:manipulation}
+.mo-only{display:none}
+#cam{position:fixed;inset:0;z-index:20;background:#000;display:flex;align-items:center;justify-content:center}
+#cam.hid{display:none}
+#cv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#cam .fr{position:relative;width:62vmin;height:62vmin;border:4px solid var(--acc2);border-radius:24px;box-shadow:0 0 0 100vmax #0009}
+#cam .btn{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px}
+#ch{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom,0px));left:16px;right:16px;text-align:center;background:#000b;padding:12px;border-radius:12px;margin:0}
+@media(pointer:coarse){.pc-only{display:none}.mo-only{display:inline}.btn,.ghost,.tabs button{min-height:48px}.drop{padding:16px 12px}}
+@media(max-width:640px){
+main{padding-bottom:120px}
+header{flex-wrap:wrap}
+.tabs{position:fixed;left:0;right:0;bottom:0;margin:0;z-index:5;flex-wrap:nowrap;gap:6px;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:#0d0720f2;border-top:1px solid var(--line);backdrop-filter:blur(10px)}
+.tabs button{min-width:0;padding:8px 4px;font-size:.82rem;line-height:1.2}
+.btn{width:100%}.row.ex .ghost{flex:1 1 100%}
+.pt{display:none}
+}
+@media(max-width:520px){.vd{flex-direction:column;text-align:center}h1{font-size:1.6rem}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div><h1>ПроверьСсылку</h1>
+<p class="lead">Покажу, где именно обман: в сообщении, ссылке, QR-коде, фото, файле или на целой флешке.</p></div>
+<button class="ghost" id="big" aria-pressed="false">Крупный текст</button>
+</header>
+<div id="cam" class="hid"><video id="cv" playsinline muted></video><div class="fr"></div><button class="btn" id="cx">Закрыть</button><p id="ch"></p></div>
+<div class="tabs" role="tablist">
+<button role="tab" id="t1" aria-selected="true">Проверить</button>
+<button role="tab" id="t2" aria-selected="false">Тренировка</button>
+<button role="tab" id="t3" aria-selected="false">Я уже нажал(а)</button>
+</div>
+
+<section id="p1">
+<textarea id="inp" aria-label="Сообщение или ссылка" placeholder="Вставьте сюда сообщение, СМС, письмо или ссылку…"></textarea>
+<div class="row" style="justify-content:flex-start;margin:8px 0 0"><button class="ghost" id="pst" type="button">Вставить из буфера</button></div>
+<div class="drop" id="dz">
+<p><span class="pc-only">Перетащите сюда файлы, фото, QR-код, папку или флешку</span><span class="mo-only">Сканируйте QR камерой или добавьте файлы и скриншоты. Флешку через переходник выберите в списке «Выбрать файлы».</span></p>
+<div class="row">
+<button class="btn" id="qrc" type="button" style="width:auto">Сканировать QR камерой</button>
+<label class="ghost" tabindex="0">Выбрать файлы<input type="file" id="pf" multiple hidden></label>
+<label class="ghost pc-only" tabindex="0">Флешка или папка<input type="file" id="pd" webkitdirectory multiple hidden></label>
+<label class="ghost" tabindex="0">Снять фото / QR<input type="file" id="pc" accept="image/*" capture="environment" hidden></label>
+</div>
+<div id="chips" class="mut" style="margin-top:10px"></div>
+</div>
+<label class="mut" style="display:flex;gap:8px;margin:6px 0;align-items:flex-start"><input type="checkbox" id="aiOn" checked style="width:22px;height:22px;flex:none"><span>Разрешить ИИ-разбор. Текст и фото будут отправлены на сервер ИИ. Не включайте, если в них личные данные.</span></label>
+<div class="row" style="justify-content:flex-start"><button class="btn" id="go">Проверить всё</button></div>
+<div class="row ex">
+<button class="ghost" data-ex="Срочно! Ваш счёт Kaspi заблокирован. Войдите в течение 24 часов и подтвердите данные: http://kaspi-secure.top/login и сообщите код из СМС.">Пример: СМС «банка»</button>
+<button class="ghost" data-ex="Мама, привет! Я потерял телефон, это мой новый номер. Срочно переведи 50 000 тг на карту друга. Никому не говори, потом всё объясню!">Пример: «родственник в беде»</button>
+<button class="ghost" data-ex="https://egov.kz">Пример: настоящий сайт</button>
+</div>
+<div id="out"></div>
+</section>
+
+<section id="p2" class="hid"><div class="card" id="quiz"></div></section>
+
+<section id="p3" class="hid">
+<div class="card"><b>Не паникуйте. Чем быстрее вы действуете, тем больше шансов всё исправить.</b><br><span class="mut">Нажмите на то, что случилось.</span></div>
+<details class="q"><summary>Я назвал(а) код из СМС или пароль</summary><div><ol class="do"><li>Позвоните в банк по номеру на обратной стороне карты. Не по номеру из сообщения.</li><li>Попросите заблокировать карту и приостановить операции.</li><li>Смените пароль от банка и почты с другого устройства.</li><li>Выйдите из аккаунтов на всех устройствах.</li></ol></div></details>
+<details class="q"><summary>Я перевёл(а) деньги мошенникам</summary><div><ol class="do"><li>Сразу позвоните в банк и попросите остановить или отозвать перевод.</li><li>Обратитесь в полицию (в Казахстане 102) и подайте заявление.</li><li>Сохраните скриншоты переписки, чеки и номера телефонов.</li><li>Расскажите близким: вам не нужно стыдиться, это происходит со многими.</li></ol></div></details>
+<details class="q"><summary>Я нажал(а) на ссылку или открыл(а) файл</summary><div><ol class="do"><li>Включите режим «в самолёте» или отключите интернет.</li><li>Ничего не вводите и не подтверждайте.</li><li>Проверьте устройство антивирусом.</li><li>С другого устройства смените пароли от почты и банка.</li></ol></div></details>
+<details class="q"><summary>Я поставил(а) программу по просьбе «специалиста» (AnyDesk и др.)</summary><div><ol class="do"><li>Отключите интернет прямо сейчас.</li><li>Удалите программу.</li><li>Позвоните в банк и проверьте счета.</li><li>Смените все пароли с другого устройства.</li></ol></div></details>
+<details class="q"><summary>Я вставил(а) чужую флешку в компьютер</summary><div><ol class="do"><li>Отключите компьютер от интернета.</li><li>Не открывайте файлы с флешки. Извлеките её.</li><li>Запустите полную проверку антивирусом.</li><li>Если на компьютере были банковские данные, смените пароли с другого устройства.</li></ol></div></details>
+<details class="q"><summary>«Родственник» просит денег</summary><div><ol class="do"><li>Положите трубку и сами перезвоните ему на старый, известный вам номер.</li><li>Задайте вопрос, ответ на который знает только он.</li><li>Договоритесь в семье о <b>секретном слове</b>. Если просят денег, а слова нет, это обман.</li></ol></div></details>
+<details class="q"><summary>Для детей: кто-то пишет в игре или чате</summary><div><ol class="do"><li>Если просят фото, пароль, деньги или «не говори родителям», не отвечайте.</li><li>Сделайте скриншот и покажите взрослому.</li><li>Вас никто не накажет. Вы всё сделали правильно, что рассказали.</li></ol></div></details>
+</section>
+
+<p class="note">Это не антивирус. Приложение ищет признаки обмана по правилам и с помощью ИИ, но не гарантирует безопасность. Если просят деньги, код или пароль, остановитесь и позвоните в банк по номеру с карты.</p>
+</main>
+
+<script>
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var BR={kaspi:['kaspi.kz'],halyk:['halykbank.kz','halyk.kz'],homebank:['homebank.kz'],jusan:['jusan.kz'],egov:['egov.kz'],kazpost:['post.kz'],freedom:['ffin.kz','freedombank.kz'],forte:['forte.kz','fortebank.kz'],kolesa:['kolesa.kz'],krisha:['krisha.kz'],olx:['olx.kz'],beeline:['beeline.kz'],kcell:['kcell.kz'],altel:['altel.kz'],tele2:['tele2.kz'],sber:['sberbank.ru','sber.ru'],tinkoff:['tinkoff.ru'],gosuslugi:['gosuslugi.ru'],google:['google.com'],apple:['apple.com'],paypal:['paypal.com'],microsoft:['microsoft.com'],whatsapp:['whatsapp.com'],telegram:['telegram.org','t.me']};
+var BADTLD='xyz top click icu live online site buzz shop cfd sbs rest vip support work link'.split(' ');
+var SHORT=['bit.ly','tinyurl.com','t.co','goo.gl','cutt.ly','is.gd','clck.ru','vk.cc','rb.gy'];
+var SLD=['co','com','org','gov','net','edu'];
+var FEXT='pdf doc docx xls xlsx ppt pptx jpg jpeg png gif txt exe zip rar js html htm css json xml mp3 mp4 apk bat';
+var DX='exe|scr|bat|cmd|com|pif|msi|js|jse|vbs|vbe|wsf|ps1|lnk|apk|jar|dll|hta|reg|cpl|sh|iso';
+function reg(h){var p=h.split('.');if(p.length<=2)return h;var n=2;if(p[p.length-1].length==2&&SLD.indexOf(p[p.length-2])>-1)n=3;return p.slice(-n).join('.')}
+function norm(s){return s.replace(/rn/g,'m').replace(/0/g,'o').replace(/1/g,'l').replace(/5/g,'s').replace(/vv/g,'w')}
+function anaU(raw){
+ var R=[],sc=0;function add(p,t,d){sc+=p;R.push({p:p,t:t,d:d})}
+ var u=raw,https=/^https:/i.test(raw),http=/^http:/i.test(raw);
+ if(!/^[a-z]+:\/\//i.test(u))u='http://'+u;
+ var a;try{a=new URL(u)}catch(e){return{raw:raw,sc:30,R:[{p:30,t:'Некорректная ссылка',d:'Адрес не удаётся разобрать.'}],dom:raw}}
+ var h=a.hostname.toLowerCase(),dom=reg(h);
+ if(/^\d+\.\d+\.\d+\.\d+$/.test(h))add(40,'Адрес из цифр вместо названия','Настоящие сервисы почти никогда не просят заходить по IP-адресу.');
+ if(h.indexOf('xn--')>-1)add(35,'Домен с «хитрыми» символами','Буквы другого алфавита выглядят как латинские.');
+ if(a.username||(raw.indexOf('@')>-1&&/@.*\//.test(raw.split('?')[0])))add(30,'В ссылке есть символ @','Всё до @ браузер игнорирует, реальный сайт указан после него.');
+ var hit=false;
+ Object.keys(BR).forEach(function(b){
+  if(hit)return;var ok=BR[b].indexOf(dom)>-1,lab=h.split('.').slice(0,-1).join('.');
+  if(!ok&&lab.indexOf(b)>-1){hit=true;add(40,'Имя «'+b+'» на чужом домене','Настоящий домен здесь «'+dom+'», а у '+b+' он '+BR[b][0]+'.')}
+  else if(!ok&&norm(lab).indexOf(b)>-1&&lab.indexOf(b)<0){hit=true;add(40,'Подмена букв под «'+b+'»','Цифры или сочетания (0 вместо o, rn вместо m) имитируют название.')}
+ });
+ var tld=h.split('.').pop();
+ if(BADTLD.indexOf(tld)>-1)add(20,'Дешёвая зона .'+tld,'Мошенники часто берут такие домены: они стоят копейки.');
+ if(SHORT.indexOf(h)>-1)add(20,'Сокращённая ссылка','Невозможно увидеть, куда она ведёт.');
+ if(http&&!https)add(15,'Нет шифрования (http)','Сайт для ввода данных должен работать по https.');
+ if(h.split('.').length>4)add(15,'Слишком много поддоменов','Длинная цепочка прячет реальный домен в конце.');
+ if((h.match(/-/g)||[]).length>=2)add(10,'Много дефисов в домене','Типично для сайтов-клонов вида bank-secure-login.');
+ if(/login|verify|secure|update|confirm|bonus|prize|vyplat|pay|signin|account/i.test(a.pathname+a.search))add(10,'«Вход/подтверждение» в адресе','Часто встречается на страницах сбора данных.');
+ if(raw.length>100)add(5,'Очень длинная ссылка','Длина помогает спрятать подозрительные части.');
+ return{raw:raw,sc:Math.min(sc,100),R:R,dom:dom}
+}
+var TP=[
+[/срочно|немедленно|в течение \d+ (?:час|мин|дн)\w*|заблокирован\w*|последн(?:ее|яя) предупреждение|urgent|immediately|suspended|жедел|тез арада/gi,15,'Давление срочностью','Мошенники торопят, чтобы вы не успели подумать.'],
+[/код\w* из (?:смс|sms)|(?:смс|sms)-?код\w*|cvv|cvc|пин-?код|\bpin\b|парол\w*|одноразов\w+ (?:код|пароль)/gi,30,'Просят код, пароль или данные карты','Банки и госорганы никогда не просят эти данные.'],
+[/выигр\w*|приз\w*|компенсаци\w*|выплат\w*|бонус\w*|подарок|налоговый вычет|возврат средств/gi,15,'Обещают деньги или выигрыш','Приманка: бесплатные деньги за «подтверждение данных».'],
+[/переведите|перевод\w* на|безопасн\w+ счёт\w*|установите приложение|anydesk|teamviewer|rustdesk/gi,25,'Просят перевод или установку программы','«Безопасный счёт» и удалённый доступ — схемы вишинга.'],
+[/потерял\w* телефон|новый номер|карту друга|я в беде/gi,20,'Схема «родственник в беде»','Мошенник выдаёт себя за близкого и просит срочно перевести деньги.'],
+[/служб\w+ безопасности|сотрудник\w* (?:банка|полиции)|следовател\w+|прокуратур\w+/gi,20,'Представляются «органами»','Настоящие банки и полиция не требуют действий по телефону или в чате.'],
+[/никому не (?:говори\w*|сообщай\w*)|не говорите никому|держите в секрете|не говори\w* (?:родителям|бабушке|маме)/gi,20,'Просят молчать','Изоляция от близких — главный приём манипуляторов.']
+];
+function ln(t,i){return t.slice(0,i).split('\n').length}
+function scanText(t,O,w){
+ TP.forEach(function(p){var re=new RegExp(p[0].source,'gi'),m,n=0;while((m=re.exec(t))&&n<3){O.F.push({p:n?0:p[1],q:p[1],t:p[2],d:p[3],fr:m[0],s:m.index,e:m.index+m[0].length,w:(w||'')+'строка '+ln(t,m.index)});n++}});
+ var re=/(https?:\/\/[^\s<>"')]+|(?:[a-z0-9-]+\.)+[a-z]{2,}(?:\/[^\s<>"')]*)?)/gi,m,k=0;
+ while((m=re.exec(t))&&k<6){var u=m[0].replace(/[.,;:!?)]+$/,'');
+  if(!/^https?:/i.test(u)&&FEXT.split(' ').indexOf(u.split(/[\/]/)[0].split('.').pop().toLowerCase())>-1)continue;
+  k++;var x=anaU(u);O.links.push(x);
+  x.R.forEach(function(r){O.F.push({p:r.p,q:r.p,t:r.t,d:r.d,fr:u,s:m.index,e:m.index+u.length,w:(w||'')+'ссылка, строка '+ln(t,m.index)})})}
+}
+function hl(O){
+ var A=O.F.filter(function(f){return f.s>=0}).sort(function(a,b){return a.s-b.s}),pos=0,n=0,out='';
+ A.forEach(function(f){if(f.s<pos){f.n=0;return}f.n=++n;
+  out+=esc(O.text.slice(pos,f.s))+'<mark class="'+(f.q>=30?'h':f.q>=15?'m':'l')+'">'+esc(O.text.slice(f.s,f.e))+'<sup>'+f.n+'</sup></mark>';pos=f.e});
+ return out+esc(O.text.slice(pos))
+}
+var QRL=null;
+function loadQR(){return QRL||(QRL=new Promise(function(ok,no){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)}))}
+async function readQR(f){
+ var bm=await createImageBitmap(f);
+ if('BarcodeDetector' in window){try{var d=await new BarcodeDetector({formats:['qr_code']}).detect(bm);if(d.length)return d.map(function(x){return x.rawValue})}catch(e){}}
+ await loadQR();var k=Math.min(1,1600/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=bm.width*k;c.height=bm.height*k;
+ var g=c.getContext('2d');g.drawImage(bm,0,0,c.width,c.height);var id=g.getImageData(0,0,c.width,c.height),r=jsQR(id.data,id.width,id.height);return r?[r.data]:[]
+}
+async function scanFile(x){
+ var f=x.f,nm=x.p,low=f.name.toLowerCase(),ext=low.split('.').pop(),O={name:nm,size:f.size,F:[],links:[],file:true,hash:''};
+ function add(p,t,d,fr,w){O.F.push({p:p,q:p,t:t,d:d,fr:fr||nm,s:-1,w:w||'в самом файле'})}
+ if(low==='autorun.inf')add(50,'Файл autorun.inf','Так вирусы запускаются сами при подключении флешки.');
+ if(new RegExp('\\.(pdf|docx?|xlsx?|pptx?|jpe?g|png|gif|txt|mp3|mp4|zip|rar)\\.('+DX+')$').test(low))add(60,'Двойное расширение','Файл притворяется документом, а на деле это программа.');
+ else if(new RegExp('^('+DX+')$').test(ext))add(35,'Программа или скрипт (.'+ext+')','Если вы не ждали такой файл, запускать его нельзя.');
+ if(f.size>0){
+  var buf=new Uint8Array(await f.slice(0,8e6).arrayBuffer()),s=new TextDecoder('latin1').decode(buf);
+  if(f.size<=30e6){try{var h=await crypto.subtle.digest('SHA-256',await f.arrayBuffer());O.hash=[].map.call(new Uint8Array(h),function(b){return('0'+b.toString(16)).slice(-2)}).join('')}catch(e){}}
+  var mz=buf[0]==77&&buf[1]==90,elf=buf[0]==127&&buf[1]==69&&buf[2]==76,pk=buf[0]==80&&buf[1]==75;
+  if((mz||elf)&&!/^(exe|dll|scr|com|sys|msi|so|bin|ocx)$/.test(ext))add(60,'Внутри программа, хотя имя «.'+ext+'»','Заголовок файла исполняемый: расширение подменено.');
+  if(s.slice(0,5)=='%PDF-'){
+   [[/\/Launch/,50,'Запуск программы из PDF'],[/\/JavaScript|\/JS\s*[(<\/]/,30,'Скрипт внутри PDF'],[/\/OpenAction|\/AA\s*</,15,'Действие при открытии PDF'],[/\/EmbeddedFile/,20,'Вложенный файл внутри PDF']].forEach(function(r){var m=r[0].exec(s);if(m)add(r[1],r[2],'Обычному документу это не нужно.',m[0],'служебная часть PDF, байт '+m.index)});
+   var um,ur=/\/URI\s*\(([^)]{4,200})\)/g,c=0;while((um=ur.exec(s))&&c++<5){var x2=anaU(um[1]);O.links.push(x2);x2.R.forEach(function(r){add(r.p,r.t,r.d,um[1],'ссылка внутри PDF')})}
+  }
+  if(pk){
+   var nr=/([\w\-. \/]{1,80})\.(exe|scr|bat|cmd|js|vbs|lnk|jar|ps1|msi)/gi,nm2,seen={},cnt=0;
+   while((nm2=nr.exec(s))&&cnt<5){if(!seen[nm2[0]]){seen[nm2[0]]=1;cnt++;add(45,'Программа внутри архива или файла','Внутри лежит исполняемый файл.',nm2[0],'внутри '+f.name)}}
+   if(/vbaProject\.bin/.test(s))add(/^(docm|xlsm|pptm|dotm|xlam)$/.test(ext)?30:45,'В документе есть макросы','Макрос может скачать вирус. Не нажимайте «Включить содержимое».','vbaProject.bin','внутри '+f.name);
+   if(ext=='zip'&&(buf[6]&1))add(20,'Архив защищён паролем','Антивирус не видит внутрь. Мошенники присылают пароль в тексте письма.')
+  }
+  var tx=/^(txt|html?|eml|csv|svg|js|json|xml|url|md|rtf|log|vcf|ics|bat|ps1|vbs|cmd|inf)$/.test(ext)||(!pk&&!mz&&buf.slice(0,2000).indexOf(0)<0&&f.size<3e6);
+  if(tx&&f.size<3e6){
+   var t=new TextDecoder('utf-8').decode(buf.length==f.size?buf:await f.arrayBuffer());O.text=t.slice(0,6000);scanText(O.text,O);
+   if(/^(html?|svg|eml)$/.test(ext)){
+    [[/<input[^>]+type=["']?password/i,25,'Форма просит пароль','Страница собирает пароли.'],[/<form[^>]+action=["']?https?:\/\/[^\s"'>]+/i,25,'Форма отправляет данные на сторонний сайт','Всё, что вы введёте, уйдёт не туда, откуда пришёл файл.'],[/eval\(|atob\(|unescape\(|fromCharCode/i,25,'Спрятанный код','Код зашифрован, чтобы его не заметили.'],[/<iframe/i,15,'Встроенная чужая страница','Может подменять настоящий сайт.'],[/http-equiv=["']?refresh/i,15,'Автоматический переход на другой сайт',''],[/<script/i,ext=='svg'?40:5,ext=='svg'?'Скрипт внутри картинки':'Скрипт на странице','']].forEach(function(r){var m=r[0].exec(t);if(m&&r[1]>5)O.F.push({p:r[1],q:r[1],t:r[2],d:r[3],fr:m[0].slice(0,80),s:m.index,e:m.index+Math.min(m[0].length,80),w:'строка '+ln(t,m.index)})});
+    var am,ar=/<a[^>]+href=["'](https?:[^"']+)["'][^>]*>([^<]*)<\/a>/gi,k=0;
+    while((am=ar.exec(t))&&k++<20){var sh=(am[2].match(/(?:[a-z0-9-]+\.)+[a-z]{2,}/i)||[''])[0].toLowerCase();try{if(sh&&reg(sh)!=reg(new URL(am[1]).hostname.toLowerCase()))O.F.push({p:40,q:40,t:'Текст ссылки показывает один сайт, а ведёт на другой',d:'Видно «'+sh+'», а нажатие ведёт на '+new URL(am[1]).hostname+'.',fr:am[0].slice(0,100),s:am.index,e:am.index+Math.min(am[0].length,100),w:'строка '+ln(t,am.index)})}catch(e){}}
+   }
+  }
+  if(/^(jpe?g|png|gif|webp|bmp)$/.test(ext)||f.type.indexOf('image/')==0){
+   O.img=f;
+   try{(await readQR(f)).forEach(function(q){
+    O.qr=(O.qr||[]).concat(q);
+    if(/^(tel|sms|smsto|wifi|mailto):/i.test(q))add(25,'QR запускает звонок, СМС или Wi-Fi','Проверьте, что именно будет сделано, прежде чем подтверждать.',q.slice(0,80),'QR-код на картинке');
+    else{var x3=anaU(q);O.links.push(x3);add(0,'QR-код ведёт на «'+x3.dom+'»','Наклейки с QR-кодами часто клеят поверх настоящих.',q,'QR-код на картинке');x3.R.forEach(function(r){add(r.p,r.t,r.d,q,'QR-код на картинке')})}
+   })}catch(e){}
+  }
+ }
+ return O
+}
+var FILES=[],RULE=0,AIR=0,aiRun=0,SRC=[];
+function lvl(s){return s<25?['Скорее безопасно','ok','✓']:s<55?['Осторожно','warn','!']:['Опасно','bad','✕']}
+var SAY={ok:'Явных признаков обмана не найдено. Но это не гарантия: если просят деньги или коды, остановитесь.',warn:'Есть подозрительные признаки. Ничего не открывайте и не отвечайте, пока не проверите у близких или в банке.',bad:'Это очень похоже на мошенничество. Не нажимайте, не открывайте, не называйте коды и не переводите деньги.'};
+function paint(){
+ var s=Math.max(RULE,AIR),v=lvl(s),n=SRC.filter(function(o){return o.sc>=55}).length,m=SRC.filter(function(o){return o.sc>=25&&o.sc<55}).length;
+ $('vd').className='vd '+v[1];
+ $('vd').innerHTML='<div class="ring">'+v[2]+'</div><div style="flex:1"><h2>'+v[0]+'</h2><p>'+SAY[v[1]]+'</p>'+(SRC.length>1?'<p class="mut">Проверено объектов: '+SRC.length+'. Опасных: '+n+', подозрительных: '+m+'.</p>':'')+'<div class="meter"><i style="width:'+s+'%"></i></div></div>'
+}
+function vtxt(){var s=Math.max(RULE,AIR),v=lvl(s);return v[0]+'. '+SAY[v[1]]}
+function item(f){return'<li><span class="n">'+(f.n||'!')+'</span><div><b>'+esc(f.t)+'</b> <small>('+esc(f.w)+')</small><div><code>'+esc(String(f.fr).slice(0,140))+'</code></div>'+(f.d?'<div class="mut">'+esc(f.d)+'</div>':'')+'</div>'+(f.p?'<span class="pt">+'+f.p+'</span>':'')+'</li>'}
+function card(O){
+ var v=lvl(O.sc),h='<details class="src" '+(O.sc>=25||!O.file?'open':'')+'><summary>'+(O.file?'Файл: ':'Сообщение: ')+esc(O.name)+'<span class="b '+v[1]+'">'+v[0]+' · '+O.sc+'</span></summary><div>';
+ if(O.text)h+='<p class="mut">Подсвечены опасные места. Номер рядом совпадает со списком ниже.</p><div class="txt">'+hl(O)+'</div>';
+ O.links.slice(0,4).forEach(function(x){var s=esc(x.raw),d=esc(x.dom),i=s.toLowerCase().indexOf(d);h+='<p class="mut" style="margin-bottom:4px">Куда на самом деле ведёт ссылка (выделен настоящий домен):</p><div class="dom">'+(i>-1?s.slice(0,i)+'<mark>'+s.slice(i,i+d.length)+'</mark>'+s.slice(i+d.length):s)+'</div>'});
+ var L=O.F.filter(function(f){return f.s<0||f.n});
+ h+=L.length?'<ul class="r">'+L.map(item).join('')+'</ul>':'<p>Подозрительных признаков не найдено.</p>';
+ if(O.hash)h+='<p class="note">SHA-256: <code>'+O.hash+'</code><br>Этот отпечаток можно вставить на virustotal.com, чтобы проверить файл по базам антивирусов.</p>';
+ return h+'</div></details>'
+}
+function steps(s){return s>=25?'<li>Не переходите по ссылке, не открывайте файл и не сообщайте коды.</li><li>Откройте сайт или приложение банка вручную и проверьте уведомления там.</li><li>Если уже нажали или ввели данные, откройте вкладку «Я уже нажал(а)».</li><li>Покажите сообщение близким. Это не стыдно, так делают все.</li>':'<li>Откройте сервис сами: введите адрес вручную или используйте закладку.</li><li>Никогда не называйте код из СМС по чьей-то просьбе.</li>'}
+function tab(n){[1,2,3].forEach(function(i){$('p'+i).className=i==n?'':'hid';$('t'+i).setAttribute('aria-selected',i==n)});window.scrollTo(0,0);if(n==2)quiz()}
+async function run(){
+ var t=$('inp').value.trim(),o=$('out');
+ if(!t&&!FILES.length){o.innerHTML='<div class="card">Вставьте текст или добавьте файл, фото, папку.</div>';return}
+ SRC=[];var N=FILES.length;
+ o.innerHTML='<div class="card" id="pg">Проверяю…<div class="bar"><i id="pgb"></i></div></div>';
+ if(t){var T={name:'введённый текст',F:[],links:[],text:t.slice(0,6000)};scanText(T.text,T);SRC.push(T)}
+ for(var i=0;i<N;i++){
+  $('pg').firstChild.nodeValue='Проверяю файл '+(i+1)+' из '+N+': '+FILES[i].p.slice(-50);$('pgb').style.width=(i/N*100)+'%';
+  await new Promise(function(r){setTimeout(r)});
+  try{SRC.push(await scanFile(FILES[i]))}catch(e){SRC.push({name:FILES[i].p,F:[{p:10,q:10,t:'Файл не удалось прочитать',d:'Он может быть повреждён или защищён.',fr:FILES[i].p,s:-1,w:'файл'}],links:[],file:true})}
+ }
+ SRC.forEach(function(O){O.sc=Math.min(100,O.F.reduce(function(a,f){return a+f.p},0))});
+ SRC.sort(function(a,b){return b.sc-a.sc});
+ RULE=SRC.reduce(function(a,O){return Math.max(a,O.sc)},0);AIR=0;
+ var big=SRC.filter(function(O){return O.sc>=25||!O.file}),ok=SRC.filter(function(O){return O.sc<25&&O.file}),h='<div id="vd" class="vd"></div>';
+ h+='<div class="row" style="justify-content:flex-start;margin-top:12px"><button class="ghost" id="say">Прочитать вслух</button><button class="ghost" id="cp">Отправить близким</button><button class="ghost" id="sos">Я уже нажал(а)</button></div>';
+ h+=big.map(card).join('');
+ if(ok.length)h+='<details class="src"><summary>Без замечаний: '+ok.length+'<span class="b ok">✓</span></summary><div>'+ok.map(function(O){return'<div class="clean"><span style="color:var(--ok)">✓</span><span>'+esc(O.name)+(O.qr?' <small>(QR: '+esc(O.qr[0].slice(0,80))+')</small>':'')+'</span></div>'}).join('')+'</div></details>';
+ h+='<div class="card ai" id="ai"></div><div class="card"><b>Что делать</b><ul class="do">'+steps(RULE)+'</ul></div>';
+ o.innerHTML=h;paint();if(RULE>=55&&navigator.vibrate)navigator.vibrate([150,80,150]);$('vd').scrollIntoView({block:'start'});
+ $('say').onclick=function(){var s=window.speechSynthesis;if(!s)return;if(s.speaking){s.cancel();return}var u=new SpeechSynthesisUtterance(vtxt());u.lang='ru-RU';s.speak(u)};
+ $('cp').onclick=function(){var x=vtxt()+'\nПроверено в «ПроверьСсылку».\n'+SRC.filter(function(O){return O.sc>=25}).map(function(O){return'• '+O.name+': '+O.F.filter(function(f){return f.p}).slice(0,3).map(function(f){return f.t}).join('; ')}).join('\n');
+  if(navigator.share){navigator.share({text:x}).catch(function(){});return}try{navigator.clipboard.writeText(x).then(function(){$('cp').textContent='Скопировано'})}catch(e){window.prompt('Скопируйте:',x)}};
+ $('sos').onclick=function(){tab(3);window.scrollTo(0,0)};
+ askAI(t)
+}
+async function shrink(f){var bm=await createImageBitmap(f),k=Math.min(1,1280/Math.max(bm.width,bm.height)),c=document.createElement('canvas');c.width=Math.round(bm.width*k);c.height=Math.round(bm.height*k);c.getContext('2d').drawImage(bm,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.72).split(',')[1]}
+async function askAI(t){
+ var box=$('ai'),id=++aiRun;
+ if(!$('aiOn').checked){box.innerHTML='<h3>Разбор ИИ</h3><div class="mut">ИИ-разбор выключен. Показана проверка по правилам.</div>';return}
+ box.innerHTML='<h3>Разбор ИИ</h3><div class="mut">ИИ изучает материалы… это может занять до минуты.</div>';
+ var items=SRC.slice(0,12).map(function(O){return{name:O.name,file:!!O.file,rules:O.F.filter(function(f){return f.p}).map(function(f){return f.t}),qr:O.qr?O.qr[0].slice(0,200):'',text:O.text?O.text.slice(0,1500):''}});
+ var imgs=[];try{imgs=await Promise.all(SRC.filter(function(O){return O.img}).slice(0,3).map(function(O){return shrink(O.img)}))}catch(e){}
+ try{
+  var res=await fetch('/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:items,images:imgs})});
+  if(!res.ok)throw await res.json().catch(function(){return{}});
+  var r=await res.json();
+  if(id!==aiRun)return;
+  AIR=Math.max(0,Math.min(100,+r.risk||0));paint();
+  var V={safe:['Скорее безопасно','ok'],suspicious:['Подозрительно','warn'],scam:['Похоже на мошенничество','bad']}[r.verdict]||['Подозрительно','warn'];
+  var h='<h3>Разбор ИИ: <span class="b '+V[1]+'" style="margin-left:6px">'+V[0]+' · '+AIR+'</span></h3><span class="mut">'+esc(r.type||'')+'</span><p style="font-size:1.1em">'+esc(r.simple||'')+'</p>';
+  if(r.kid)h+='<details class="q"><summary>Объяснить ребёнку</summary><div>'+esc(r.kid)+'</div></details>';
+  if(r.places&&r.places.length)h+='<b>Где именно обман</b><ul class="r">'+r.places.map(function(p,i){return'<li><span class="n">'+(i+1)+'</span><div><mark class="h">'+esc(String(p.quote||''))+'</mark><div class="mut">'+esc(String(p.why||''))+(SRC[p.src-1]?' <small>('+esc(SRC[p.src-1].name)+')</small>':'')+'</div></div></li>'}).join('')+'</ul>';
+  if(r.actions&&r.actions.length)h+='<b>Что делать</b><ul class="do">'+r.actions.map(function(a){return'<li>'+esc(String(a))+'</li>'}).join('')+'</ul>';
+  if(r.reply)h+='<b>Что можно ответить</b><div class="msg" style="margin-top:6px">'+esc(String(r.reply))+'</div>';
+  box.innerHTML=h+'<p class="note">ИИ может ошибаться. Важные решения проверяйте через официальные каналы.</p>'
+ }catch(e){if(id!==aiRun)return;box.innerHTML='<h3>Разбор ИИ</h3><div class="mut">'+(e&&e.error==='rate'?'Слишком много проверок подряд. Подождите минуту и попробуйте снова.':'ИИ сейчас недоступен. Проверка по правилам выше всё равно работает.')+'</div>'}
+}
+function chips(){$('chips').innerHTML=FILES.length?'Добавлено: <b>'+FILES.length+'</b> '+FILES.slice(0,3).map(function(x){return'<code>'+esc(x.p.slice(-30))+'</code>'}).join(' ')+(FILES.length>3?' …':'')+' <button class="ghost" id="clr">Очистить</button>':'';if(FILES.length)$('clr').onclick=function(){FILES=[];chips()}}
+function addF(a){a.forEach(function(x){if(FILES.length<400)FILES.push(x)});chips();run()}
+$('pf').onchange=function(e){addF([].map.call(e.target.files,function(f){return{f:f,p:f.name}}));e.target.value=''};
+$('pd').onchange=function(e){addF([].map.call(e.target.files,function(f){return{f:f,p:f.webkitRelativePath||f.name}}));e.target.value=''};
+$('pc').onchange=function(e){addF([].map.call(e.target.files,function(f){return{f:f,p:f.name||'фото'}}));e.target.value=''};
+async function walk(en,out){if(en.isFile)out.push({f:await new Promise(function(r){en.file(r)}),p:en.fullPath.slice(1)});else{var rd=en.createReader(),a;do{a=await new Promise(function(r){rd.readEntries(r)});for(var i=0;i<a.length&&out.length<400;i++)await walk(a[i],out)}while(a.length&&out.length<400)}}
+var dz=$('dz');
+['dragover','dragenter'].forEach(function(n){dz.addEventListener(n,function(e){e.preventDefault();dz.classList.add('on')})});
+dz.addEventListener('dragleave',function(){dz.classList.remove('on')});
+dz.addEventListener('drop',async function(e){e.preventDefault();dz.classList.remove('on');var out=[],it=[].slice.call(e.dataTransfer.items||[]).map(function(i){return i.webkitGetAsEntry&&i.webkitGetAsEntry()});
+ if(it.length&&it[0]){for(var i=0;i<it.length;i++)if(it[i])await walk(it[i],out)}else out=[].map.call(e.dataTransfer.files,function(f){return{f:f,p:f.name}});addF(out)});
+document.addEventListener('paste',function(e){var a=[].filter.call(e.clipboardData.items,function(i){return i.kind=='file'}).map(function(i){var f=i.getAsFile();return{f:f,p:'вставленное изображение'}});if(a.length)addF(a)});
+$('go').onclick=run;
+$('pst').onclick=async function(){try{var t=await navigator.clipboard.readText();$('inp').value=t;if(t.trim())run()}catch(e){$('inp').focus();$('inp').placeholder='Нажмите на поле и удерживайте палец, затем выберите «Вставить»'}};
+var camS=null,camOn=false;
+function camStop(){camOn=false;if(camS){camS.getTracks().forEach(function(t){t.stop()});camS=null}$('cam').className='hid'}
+async function camStart(){
+ var v=$('cv'),h=$('ch');h.textContent='Запускаю камеру…';$('cam').className='';camOn=true;
+ try{camS=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});v.srcObject=camS;await v.play()}
+ catch(e){h.textContent='Камера недоступна. Разрешите её в настройках браузера или закройте и нажмите «Выбрать файлы», чтобы сфотографировать QR.';return}
+ var det=null;if('BarcodeDetector' in window){try{det=new BarcodeDetector({formats:['qr_code']})}catch(e){}}
+ if(!det){try{await loadQR()}catch(e){h.textContent='Не удалось загрузить сканер. Сфотографируйте QR-код и добавьте фото.';return}}
+ h.textContent='Наведите камеру на QR-код. Переходить по нему не нужно, я только проверю.';
+ var c=document.createElement('canvas'),g=c.getContext('2d',{willReadFrequently:true});
+ while(camOn){
+  await new Promise(function(r){setTimeout(r,220)});
+  if(!camOn||v.readyState<2||!v.videoWidth)continue;
+  var val=null;
+  try{if(det){var d=await det.detect(v);if(d.length)val=d[0].rawValue}
+   else{var k=Math.min(1,640/v.videoWidth);c.width=v.videoWidth*k;c.height=v.videoHeight*k;g.drawImage(v,0,0,c.width,c.height);var im=g.getImageData(0,0,c.width,c.height),q=jsQR(im.data,im.width,im.height);if(q)val=q.data}}catch(e){}
+  if(val){camStop();if(navigator.vibrate)navigator.vibrate(60);$('inp').value='Содержимое QR-кода: '+val;run();return}
+ }
+}
+$('qrc').onclick=camStart;$('cx').onclick=camStop;
+document.querySelectorAll('[data-ex]').forEach(function(b){b.onclick=function(){$('inp').value=b.getAttribute('data-ex');run()}});
+$('big').onclick=function(){var on=document.documentElement.classList.toggle('big');$('big').setAttribute('aria-pressed',on)};
+var Q=[
+{m:'Kaspi.kz: ваш платёж 12 500 тг отклонён. Проверьте данные карты: https://kaspi-pay.click/check',a:1,e:'Домен kaspi-pay.click не принадлежит Kaspi, а зона .click дешёвая.'},
+{m:'Вам пришёл код 4821 для входа в Telegram. Никому его не сообщайте.',a:0,e:'Это служебное сообщение, оно ничего не требует. Опасно, если кто-то потом попросит этот код.'},
+{m:'Здравствуйте, служба безопасности банка. Подозрительная операция. Назовите код из СМС, чтобы отменить её.',a:1,e:'Банк никогда не просит код из СМС. Это вишинг.'},
+{m:'Ваша посылка ожидает: https://post.kz.track-parcel.top/ID48213',a:1,e:'Настоящий домен здесь track-parcel.top. Фрагмент post.kz стоит левее и обманывает глаз.'},
+{m:'Напоминание от egov.kz: срок вашего документа заканчивается. Подробности в приложении eGov mobile.',a:0,e:'Нет ссылок и просьб ввести данные, вы сами идёте в приложение.'},
+{m:'На парковке на столбе наклейка с QR-кодом: «Оплатите парковку со скидкой 50%». Внутри ссылка park-pay.click.',a:1,e:'Мошенники клеят свои QR-коды поверх настоящих. После сканирования всегда смотрите на адрес.'},
+{m:'Вы нашли на улице флешку с надписью «Зарплаты 2026». Нужно вставить её в компьютер, чтобы найти хозяина.',a:1,e:'Чужие флешки — частая ловушка. Вставлять их нельзя, лучше отнести в полицию.'},
+{m:'Бабушка, это твой внук. Я попал в беду, никому не говори, срочно нужны деньги на карту.',a:1,e:'«Никому не говори» и срочность — признаки обмана. Перезвоните внуку на его настоящий номер.'}
+],qi=0,qs=0;
+function quiz(){
+ var q=$('quiz');
+ if(qi>=Q.length){q.innerHTML='<b>Результат: '+qs+' из '+Q.length+'</b><p>'+(qs>=Q.length-1?'Отлично: вы замечаете главные признаки обмана.':'Пройдите ещё раз и смотрите на домен и просьбы о кодах и деньгах.')+'</p><button class="btn" id="rs">Пройти заново</button>';$('rs').onclick=function(){qi=0;qs=0;quiz()};return}
+ var c=Q[qi];q.innerHTML='<p class="note">Сообщение '+(qi+1)+' из '+Q.length+'</p><div class="msg">'+esc(c.m)+'</div><p>Это опасно?</p><div class="opt"><button class="btn" data-a="1">Да, опасно</button><button class="ghost" data-a="0">Нет, безопасно</button></div><div id="fb"></div>';
+ q.querySelectorAll('[data-a]').forEach(function(b){b.onclick=function(){var r=+b.getAttribute('data-a')===c.a;if(r)qs++;q.querySelector('.opt').remove();$('fb').innerHTML='<p><b style="color:'+(r?'var(--ok)':'var(--bad)')+'">'+(r?'Верно.':'Неверно.')+'</b> '+esc(c.e)+'</p><button class="btn" id="nx">Дальше</button>';$('nx').onclick=function(){qi++;quiz()}}})
+}
+[1,2,3].forEach(function(i){$('t'+i).onclick=function(){tab(i)}});
+</script>
+</body>
+</html>
